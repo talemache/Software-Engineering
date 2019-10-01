@@ -12,3 +12,7 @@
 * Tester - Ryan K
 * Tester - Ryan #2
 * Operations Engineer - Kane
+
+# Info
+
+[Flask docs](http://exploreflask.com/en/latest/index.html)
