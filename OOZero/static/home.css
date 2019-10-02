@@ -1,0 +1,339 @@
+body {
+    background-color: white;
+    margin: 0;
+    margin-bottom: 8%;
+}
+
+input {
+    border: solid 0.5vh white;
+    margin: auto;
+    display: block;
+    font-family: 'Open Sans';
+    font-size: 3vh;
+    padding: 1%;
+}
+
+input:hover label{
+    color: #2B59C3;
+    background-color: white;
+}
+
+label {
+    color: white;
+    display: inline-block;
+    background-color: #2B59C3;
+    font-family: 'Open Sans';
+    font-size: 4vh;
+    text-align: center;
+    margin: 0;
+    width: 28%;
+    padding: 1% 0%;
+    border: solid 0.5vh white;
+    position: relative;
+    left: 1%;
+    bottom: 10vh;
+    z-index: -2;
+}
+
+
+
+.featDesc {
+    text-align: center;
+    color: #266DD3;
+    font-family: 'Open Sans';
+    margin-top: 5%;
+    font-size: 4vh;
+}
+
+.features {
+    opacity: 0;
+}
+
+.featureItem {
+    display: inline-block;
+    color: white;
+    font-size: 3vh;
+    background-color: #266DD3;
+    text-align: center;
+    margin: 0% 3%;
+    font-family: "Open Sans";
+    height: 100%;
+    width: 12%;
+    padding: 8vh 2.3vh;
+    border-radius: 100%;
+    cursor: pointer;
+    border: solid 0.5vh white;
+}
+
+.featureList {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: auto;
+}
+
+.featTitle {
+    text-align: center;
+    font-family: 'Open Sans';
+    color: #266DD3;
+    font-size: 6vh;
+    margin-top: 8%;
+    margin-bottom: 2%;
+}
+
+.fileName {
+    text-align: center;
+    color: #266DD3;
+    font-family: 'Open Sans';
+    font-size: 2.5vh;
+    position: relative;
+    margin-top: 0;
+}
+
+.fileUpload {
+    opacity: 0;
+    overflow: hidden;
+    z-index: -1;
+    cursor: pointer;
+    width: 28%;
+    padding: 1% 0%;
+    height: 5vh;
+}
+
+.greeting {
+    margin-top: 12%;
+}
+
+.headerBar {
+    background-color: #0A369D;
+    display: block;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 0.9vh 0%;
+    z-index: 999;
+}
+
+.headerBar2 {
+    background-color: #0A369D;
+    display: block;
+    text-align: center;
+    width: 100%;
+    padding: 0.9vh 0%;
+    z-index: 999;
+}
+
+
+.headerTitle {
+    color: white;
+    font-size: 8vh;
+    font-family: 'Oswald';
+    letter-spacing: .2vh;
+    padding: 1% 0%;
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+.headerTitle2 {
+    color: white;
+    font-size: 5vh;
+    font-family: 'Oswald';
+    letter-spacing: .2vh;
+    padding: 2vh 0%;
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+.hello {
+    text-align: center;
+    color: #2B59C3;
+    font-family: 'Oswald';
+    font-size: 6vh;
+    letter-spacing: .2vh;
+    margin-bottom: 0;
+    margin-top: 0%;
+}
+
+.intro {
+    text-align: center;
+    color:#2B59C3;
+    font-family: 'Open Sans';
+    font-size: 3vh;
+    width: 60%;
+    margin: auto;
+    margin-top: 4%;
+}
+
+.labelHolder {
+    display: flex;
+    justify-content: center;
+}
+
+.pythonPic {
+    height: 3%;
+    width: 3%;
+}
+
+.pythonPic2 {
+    height: 5vh;
+    width: 5vh;
+}
+
+.statement {
+    font-family: "Open Sans";
+    font-size: 3vh;
+    color: #2B59C3;
+    text-align: center;
+}
+
+.submit {
+    visibility: hidden;
+    font-size: 4vh;
+    width: 28%;
+    margin: 0;
+    position: relative;
+    left: 1%;
+    bottom: 5vh;
+    background-color: #2B59C3;
+    color: white;
+    cursor: pointer;
+}
+
+.submitHolder {
+    display: flex;
+    justify-content: center;
+}
+
+.submitImage {
+    width: 2%;
+    height: 2%;
+    visibility: hidden;
+    position: relative;
+    right: 8%;
+    bottom: 2.2vh;
+}
+
+.upDesc {
+    text-align: center;
+    color: #2B59C3;
+    font-family: 'Open Sans';
+    font-size: 3vh;
+    margin-bottom: 2%;
+
+}
+
+.upload {
+    opacity: 0;
+}
+
+.uploadImage {
+    width: 2%;
+    height: 2%;
+    position: relative;
+    right: 7%;
+    bottom: 6.8vh;
+}
+
+.downArrow {
+    display: flex;
+    margin: auto;
+    justify-content: center;
+}
+
+.bounce {
+    -moz-animation: bounce 3s infinite;
+    -webkit-animation: bounce 3s infinite;
+    animation: bounce 3s infinite;
+}
+
+@-moz-keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        -moz-transform: translateY(0);
+        transform: translateY(0);
+    }
+
+    40% {
+        -moz-transform: translateY(-10px);
+        transform: translateY(-10px);
+    }
+
+    60% {
+        -moz-transform: translateY(-5px);
+        transform: translateY(-5px);
+    }
+}
+
+@-webkit-keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+
+    40% {
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px);
+    }
+
+    60% {
+        -webkit-transform: translateY(-5px);
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        -moz-transform: translateY(0);
+        -ms-transform: translateY(0);
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+
+    40% {
+        -moz-transform: translateY(-10px);
+        -ms-transform: translateY(-10px);
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px);
+    }
+
+    60% {
+        -moz-transform: translateY(-5px);
+        -ms-transform: translateY(-5px);
+        -webkit-transform: translateY(-5px);
+        transform: translateY(-5px);
+    }
+}
+
+.arrowPic {
+    height: 2%;
+    width: 2%;
+}
+
+#arrow1 {
+    cursor: pointer;
+}
+
+#arrow2 {
+    cursor: pointer;
+}
