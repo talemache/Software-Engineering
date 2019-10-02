@@ -1,24 +1,13 @@
 # Software Engineering(Team 00-zero)
 
-### Positions:
-* President - Jacob Lebowitz
-* Scrum Master - Luke
-* Market Analyst - Chael
-* Requirement Analyst - Rabah
-* Developer - Jared
-* Developer - Abbey
-* Developer - Nick
-* Developer - Jake
-* Tester - Ryan K
-* Tester - Ryan #2
-* Operations Engineer - Kane
+## Info
+[Our Website](http://augmentedmode.pythonanywhere.com/)
 
-# Info
 [Flask docs](http://exploreflask.com/en/latest/index.html)
 
 [Flask tutorials](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 
-# Setup
+## Setup
 Depending on your system you may need to use py or python3 instead of python
 ```
 cd OOZero
@@ -35,11 +24,15 @@ Linux Bash: export FLASK_APP=run
 flask run
 ```
 
-# Testing
-Automated unit tests are put in the OOZero/tests directory and should be named test____.py to be found by automatic test discovery. Use -b to suppress print statements
-```
-python setup.py test
-```
-
-# Maintance
-New exteral library dependencies from PyPI must be added to requirements.txt on there own line
+## Positions:
+* President - Jacob Lebowitz
+* Scrum Master - Luke
+* Market Analyst - Chael
+* Requirement Analyst - Rabah
+* Developer - Jared
+* Developer - Abbey
+* Developer - Nick
+* Developer - Jake
+* Tester - Ryan K
+* Tester - Ryan #2
+* Operations Engineer - Kane
