@@ -24,6 +24,10 @@ Linux Bash: export FLASK_APP=run
 flask run
 ```
 
+## Maintance:
+NEVER COMMIT OOZero/instance/config.py to the repository. This file will contain the secret keys.
+
+
 ## Positions:
 * President - Jacob Lebowitz
 * Scrum Master - Luke
