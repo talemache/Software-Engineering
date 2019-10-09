@@ -13,6 +13,7 @@ class User(db.Model):
     Email = db.Column(db.String(60), unique=False, nullable=True)
     Hash = db.Column(db.String(64), unique=False, nullable=False)
     Salt = db.Column(db.String(64), unique=False, nullable=False)
+    ProfilePicture = db.Column(db.LargeBinary, nullable=True) 
 
     def __repr__(self):
-        return str(self.Username) + ' ' + str(self.Name) + ' ' + str(self.Email)
+        return str(self.Id) + ' ' + Idstr(self.Username) + ' ' + str(self.Name) + ' ' + str(self.Email)  + ' ' + str(self.Hash)  + ' ' + str(self.Salt) 
