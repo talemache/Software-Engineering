@@ -17,9 +17,9 @@ or
 python setup.py install
 ```
 ```
-Windows Powershell: $env:FLASK_APP = "run"
-Windows CMD: set FLASK_APP=run
-Linux Bash: export FLASK_APP=run
+Windows Powershell: $env:FLASK_APP = "flask_app.py"
+Windows CMD: set FLASK_APP=flask_app.py
+Linux Bash: export FLASK_APP=flask_app.py
 
 flask run
 ```
