@@ -60,7 +60,16 @@ class TestUser(TestCase, unittest.TestCase):
         pass
 
     def test_removeUser(self):
-        pass
+        testPerson = user.User.query.filter_by(username="jeff").first()
+        user.removeUser(testPerson)
+        self.assertIsNone(user.User.query.filter_by(username="jeff").first()) #Test remove by User object
+        self.assertIsNotNone(user.User.query.filter_by(username="epicUsername69").first()) #Ensure random other users where not deleted
+        user.removeUser("epicUsername69")
+        self.assertIsNone(user.User.query.filter_by(username="epicUsername69").first()) #Test remove by username
+        testPerson = user.User.query.filter_by(username="username").first()
+        user.removeUser(testPerson.id)
+        self.assertIsNone(user.User.query.filter_by(username="username").first()) #Test remove by id
+        user.removeUser(testPerson.id) #Make sure error is not thrown for non existent user
 
     def test_authenticateUser(self):
         pass

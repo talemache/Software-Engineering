@@ -44,15 +44,21 @@ def authenticateUser(username, password):
     pass
 
 def removeUser(user):
-    """Removes user from database
+    """Removes user from database, if user doesn't exist don't do anything
 
     Args:
         user (str | int | User): Removes user by id, username, or User object
-    
-    Returns:
-        bool: was user sucessfuly removed
     """
-    pass
+    if type(user) == str:
+        user = User.query.filter_by(username=user).first()
+    elif type(user) == int:
+        user = User.query.filter_by(id=user).first()
+    elif type(user) != User:
+        raise TypeError("User was not a string, int or User")
+    if user is None:
+        return
+    db.session.delete(user)
+    db.session.commit()
 
 def getUser(user):
     """Gets user from database
