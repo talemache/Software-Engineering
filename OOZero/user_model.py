@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from OOZero.model import db
 import hashlib
+import secrets
 
 #TODO Add database URI to config/production and config/development config
 #TODO Add username/password or secret key to instant/config
@@ -34,17 +35,57 @@ def hashPassword(password, salt):
     hashFunct.update(salt.encode('utf-8'))
     return hashFunct.hexdigest()
 
-def addUser(user):
-    """Make sure user parameters a valid and commit to database
+def getUser(user):
+    """Gets user from database
 
     Args:
-        user (User): Must have all required parameters of appropriate values
-
+        user (str | int): Finds user by id or username
+    
     Returns:
         on sucess - User: populated with the users infomation
         on failure - None: Null
     """
-    pass
+    if type(user) == str:
+        return User.query.filter_by(username=user).first()
+    elif type(user) == int:
+        return User.query.filter_by(id=user).first()
+    else:
+        raise TypeError("User was not a string or int")
+
+def addUser(username, password, name=None, email=None, profile_picture=None):
+    """Make sure user parameters a valid and commit to database
+
+    Args:
+        username (str): must be unique, min length 1, max length 30
+        password (str): password, min length 4
+        name (str, optional): name of user, no criteria for format, max length 60
+        email (str, optional): email of user, max length 60
+        profile_picture (bytes, optioanl): to be determined
+
+    Returns:
+        on sucess - User: populated with the users infomation
+        on failure - None: Null
+
+    Raises:
+        TypeError: If any required param is null
+        ValueError: If any param out of expected range or username is not unique
+    """
+    if len(username) > 30 or len(username) < 1:
+        raise ValueError("Username length out of range")
+    if len(password) < 4:
+        raise ValueError("Password too short")
+    if not name is None and len(name) > 60:
+        raise ValueError("Name too long")
+    if not email is None and len(email) > 60:
+        raise ValueError("Email too long")
+    duplicateUser = getUser(username)
+    if not duplicateUser is None:
+        raise ValueError("Username alreay exists")
+    salt = secrets.token_hex(64)
+    db.session.add(User(username=username, name=name, email=email, password_hash = hashPassword(password, salt), salt=salt, profile_picture=profile_picture))
+    db.session.commit()
+    return getUser(username)
+    
 
 def authenticateUser(username, password):
     """Finds user with username and checks if hashed and salted password matches hash
@@ -55,9 +96,12 @@ def authenticateUser(username, password):
 
     Returns:
         on sucess - User: populated with the users infomation
-        on failure - None: Null
+        on failure - None: user doesn't exist or password is incorrect
     """
-    pass
+    challengedUser = getUser(username)
+    if not challengedUser is None and hashPassword(password, challengedUser.salt) == challengedUser.password_hash:
+        return challengedUser
+    return None
 
 def removeUser(user):
     """Removes user from database, if user doesn't exist don't do anything
@@ -76,19 +120,3 @@ def removeUser(user):
     db.session.delete(user)
     db.session.commit()
 
-def getUser(user):
-    """Gets user from database
-
-    Args:
-        user (str | int): Finds user by id or username
-    
-    Returns:
-        on sucess - User: populated with the users infomation
-        on failure - None: Null
-    """
-    if type(user) == str:
-        return User.query.filter_by(username=user).first()
-    elif type(user) == int:
-        return User.query.filter_by(id=user).first()
-    else:
-        raise TypeError("User was not a string or int")

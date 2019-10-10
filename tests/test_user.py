@@ -57,7 +57,19 @@ class TestUser(TestCase, unittest.TestCase):
         self.assertRaises(TypeError, lambda : user.getUser(3.4)) #Does not accept floats
 
     def test_addUser(self):
-        pass
+        newUser = user.addUser("dust", "goodPassword") 
+        self.assertEqual(newUser, user.getUser("dust")) #Add user
+        self.assertRaises(ValueError, lambda: user.addUser("", "goodPassword")) #Min length username
+        self.assertRaises(ValueError, lambda: user.addUser("f" * 31, "goodPassword")) #Max length username
+        self.assertRaises(TypeError, lambda: user.addUser(None, "goodPassword")) #Username type
+        self.assertRaises(ValueError, lambda: user.addUser("another", "123")) #Min length password
+        self.assertRaises(TypeError, lambda: user.addUser("one", None)) #Password type
+        self.assertRaises(ValueError, lambda: user.addUser("bytes", "goodPassword", name="F" * 61)) #Max length name
+        self.assertRaises(ValueError, lambda: user.addUser("the", "goodPassword", email="F" * 61)) #Min length email
+        self.assertRaises(ValueError, lambda: user.addUser("dust", "goodPassword")) #Duplicate username
+        otherUser = user.addUser("jimbo", "goodPassword")
+        self.assertNotEqual(newUser.salt, otherUser.salt) #Check for proper salting
+        self.assertNotEqual(newUser.password_hash, otherUser.password_hash) #Check for proper hashing
 
     def test_removeUser(self):
         testPerson = user.User.query.filter_by(username="jeff").first()
@@ -72,7 +84,10 @@ class TestUser(TestCase, unittest.TestCase):
         user.removeUser(testPerson.id) #Make sure error is not thrown for non existent user
 
     def test_authenticateUser(self):
-        pass
+        newUser = user.addUser("dust", "goodPassword")
+        self.assertIsNone(user.authenticateUser("dust", "badPassword"))
+        self.assertEqual(user.authenticateUser("dust", "goodPassword"), newUser)
+        self.assertIsNone(user.authenticateUser("fakeUsername", "goodPassword"))
 
     def test_hashPassword(self):
         x = user.hashPassword("password", "ahhhhhhhhhhhhhhhhhhhh")
