@@ -9,6 +9,7 @@
 
 ## Setup
 Depending on your system you may need to use py or python3 instead of python
+Installation:
 ```
 cd OOZero
 pip install -r requirements.txt
@@ -16,12 +17,21 @@ python setup.py develop
 or
 python setup.py install
 ```
+Running:
 ```
-Windows Powershell: $env:FLASK_APP = "run"
-Windows CMD: set FLASK_APP=run
-Linux Bash: export FLASK_APP=run
+Windows Powershell: $env:FLASK_APP = "flask_app"
+Windows CMD: set FLASK_APP=flask_app
+Linux Bash: export FLASK_APP=flask_app
 
 flask run
+```
+
+## Testing:
+
+```
+python setup.py test
+or
+pytest
 ```
 
 ## Maintance:

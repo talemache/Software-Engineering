@@ -64,4 +64,9 @@ def getUser(user):
         on sucess - User: populated with the users infomation
         on failure - None: Null
     """
-    pass
+    if type(user) == str:
+        return User.query.filter_by(username=user).first()
+    elif type(user) == int:
+        return User.query.filter_by(id=user).first()
+    else:
+        raise TypeError("User was not a string or int")
