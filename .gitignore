@@ -2,3 +2,4 @@ OOZero/instance/config.py
 *.egg
 *.egg-info
 __pycatch__/
+site.db
