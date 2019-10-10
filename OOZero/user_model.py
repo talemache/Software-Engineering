@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from OOZero.model import db
+import hashlib
 
 #TODO Add database URI to config/production and config/development config
 #TODO Add username/password or secret key to instant/config
@@ -11,12 +12,27 @@ class User(db.Model):
     username = db.Column(db.String(30), unique=True, nullable=False)
     name = db.Column(db.String(60), unique=False, nullable=True)
     email = db.Column(db.String(60), unique=False, nullable=True)
-    password_hash = db.Column(db.String(64), unique=False, nullable=False)
-    salt = db.Column(db.String(64), unique=False, nullable=False)
+    password_hash = db.Column(db.String(129), unique=False, nullable=False)
+    salt = db.Column(db.String(128), unique=False, nullable=False)
     profile_picture = db.Column(db.LargeBinary, nullable=True) 
 
     def __repr__(self):
         return str(self.id) + ', ' + str(self.username) + ', ' + str(self.name) + ', ' + str(self.email)  + ', ' + str(self.password_hash)  + ', ' + str(self.salt) + "\n" 
+
+def hashPassword(password, salt):
+    """Generates hash from given salt and password
+
+    Args:
+        password (str): password
+        salt (str): 128 byte hex string 
+
+    Returns:
+        (str): 128 byte hex hash
+    """
+    hashFunct = hashlib.sha3_512()
+    hashFunct.update(password.encode('utf-8'))
+    hashFunct.update(salt.encode('utf-8'))
+    return hashFunct.hexdigest()
 
 def addUser(user):
     """Make sure user parameters a valid and commit to database

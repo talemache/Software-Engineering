@@ -74,6 +74,13 @@ class TestUser(TestCase, unittest.TestCase):
     def test_authenticateUser(self):
         pass
 
+    def test_hashPassword(self):
+        x = user.hashPassword("password", "ahhhhhhhhhhhhhhhhhhhh")
+        self.assertEqual(x, "87944a379ba0ecdb9f65e2ddfea8503dd2fee42499d55ed590e9783a8c6d68b46e8a568146d1815e1b9330f6307cd0c101dc5330c6ef4b171b4a852efd037daa")
+        x = user.hashPassword("password", "lessAHHHHH")
+        self.assertNotEqual(x, "87944a379ba0ecdb9f65e2ddfea8503dd2fee42499d55ed590e9783a8c6d68b46e8a568146d1815e1b9330f6307cd0c101dc5330c6ef4b171b4a852efd037daa")
+        self.assertEqual(len(x), 128)
+
 
 if __name__ == '__main__':
     unittest.main()
