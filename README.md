@@ -25,7 +25,7 @@ flask run
 ```
 
 ## Maintance:
-NEVER COMMIT OOZero/instance/config.py to the repository. This file will contain the secret keys.
+NEVER COMMIT THE CONTENTES OF ./instance/ to the repository. This directory contains the secret keys and other deployment spcific infomation. To obtain this directory please ask.
 
 
 ## Positions:

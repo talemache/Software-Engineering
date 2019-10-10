@@ -1,8 +1,7 @@
-from . import app
+from OOZero import create_app
 from flask import Flask, render_template, request
 
-app = Flask(__name__)
-app.config.from_object('config.ProductionConfig')
+app = create_app()
 
 @app.route('/')
 def home():

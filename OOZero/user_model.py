@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from OOZero.model import db
 
-app = Flask(__name__)
 #TODO Add database URI to config/production and config/development config
 #TODO Add username/password or secret key to instant/config
-db = SQLAlchemy(app)
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,7 +26,7 @@ def addUser(user):
 
     Returns:
         on sucess - User: populated with the users infomation
-        on failure - bool: False
+        on failure - None: Null
     """
     pass
 
@@ -39,9 +39,29 @@ def authenticateUser(username, password):
 
     Returns:
         on sucess - User: populated with the users infomation
-        on failure - bool: False
+        on failure - None: Null
     """
     pass
 
 def removeUser(user):
+    """Removes user from database
+
+    Args:
+        user (str | int | User): Removes user by id, username, or User object
+    
+    Returns:
+        bool: was user sucessfuly removed
+    """
+    pass
+
+def getUser(user):
+    """Gets user from database
+
+    Args:
+        user (str | int): Finds user by id or username
+    
+    Returns:
+        on sucess - User: populated with the users infomation
+        on failure - None: Null
+    """
     pass
