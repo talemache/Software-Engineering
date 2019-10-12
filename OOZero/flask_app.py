@@ -1,6 +1,6 @@
 from OOZero import create_app
-from flask import Flask, render_template, request
-from OOZero.user_model import authenticateUser
+from flask import Flask, render_template, request, redirect, url_for
+from OOZero.user_model import authenticateUser, addUser
 from OOZero.user_session import login_required, user_login, user_logout
 
 app = create_app()
@@ -20,7 +20,7 @@ def login():
         user = authenticateUser(username, password)
         if user:
             user_login(user)
-            return redirect(url_for(''))
+            return redirect(url_for('home'))
         else:
             error = 'Incorrect username or password entered.'
 
@@ -29,7 +29,7 @@ def login():
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():
     user_logout()
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run()
