@@ -1,3 +1,7 @@
 OOZero/instance/config.py
 *.egg
 *.egg-info
+__pycache__/
+*.db
+instance/
+.pytest_cache/
