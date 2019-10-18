@@ -33,6 +33,7 @@ class TestUser(TestCase, unittest.TestCase):
         users.append(user.User(username="test", password_hash="iiojfeaioieof", salt="saltySalt"))
         events = []
         events.append(event.Event(name="Tie my shoe", owner_id=1, event_type=event.EventType.NOTE))
+        events.append(event.Event(name="Raid Area 51", owner_id=1, parent_id=1, event_type=event.EventType.NOTE))
         db.create_all()
         for value in users:
             db.session.add(value)
@@ -51,9 +52,15 @@ class TestUser(TestCase, unittest.TestCase):
         self.assertEqual(user1.salt, "saltySalt") #Qurerying database works
         self.assertEqual(event1.name, "Tie my shoe")
         self.assertEqual(event1.owner, user.User.query.filter_by(id='1').first())
+        self.assertTrue(event1 in user.User.query.filter_by(id='1').first().events)
 
-    
-
+    def test_parentChild(self):
+        event0 = event.Event.query.filter_by(id="1").first()
+        event1 = event.Event.query.filter_by(id="2").first()
+        self.assertIsNotNone(event0)
+        self.assertIsNotNone(event1)
+        self.assertEqual(event0, event1.parent)
+        self.assertTrue(event1 in event0.children)
 
 if __name__ == '__main__':
     unittest.main()
