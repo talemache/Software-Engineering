@@ -96,11 +96,6 @@ class TestUser(TestCase, unittest.TestCase):
         self.assertRaises(ValueError, lambda: event.createEvent("REMINDER", 1, event.EventType.REMINDER, start_time=datetime.datetime.utcnow(), end_time=datetime.datetime.utcnow()))
         self.assertRaises(ValueError, lambda: event.createEvent("REMINDER", 1, event.EventType.REMINDER, end_time=datetime.datetime.utcnow()))
         self.assertRaises(ValueError, lambda: event.createEvent("REMINDER", 1, event.EventType.REMINDER))
-        event0 = event.createEvent("ALL_DAY", 1, event.EventType.ALL_DAY, start_time=datetime.datetime.utcnow(), end_time=datetime.datetime.utcnow())
-        self.assertEqual(event0.name, "ALL_DAY")
-        self.assertRaises(ValueError, lambda: event.createEvent("ALL_DAY", 1, event.EventType.ALL_DAY, start_time=datetime.datetime.utcnow()))
-        self.assertRaises(ValueError, lambda: event.createEvent("ALL_DAY", 1, event.EventType.ALL_DAY, end_time=datetime.datetime.utcnow()))
-        self.assertRaises(ValueError, lambda: event.createEvent("ALL_DAY", 1, event.EventType.ALL_DAY))
 
     def test_generateKey(self):
         self.assertEqual(event.generateKey("help"), b'F4LKJgsRbCNgghB4h152bgO6HNtUc4FBbi-r4cSVgEs=')

@@ -11,11 +11,16 @@ import hashlib
 import base64
 
 class EventType(enum.Enum):
+    """Marks the type of the event and the attributes it can be expected to have
+    Note: No times
+    EVENT: Start and End dates, has duration
+    REMINDER: Has only start time, is an instantaneous event
+    ENCRYPTED: Like note, has no times. Discripion is encrypted with a password seperate from the user's password
+    """
     NOTE = 1,
     EVENT = 2,
-    ALL_DAY = 3,
-    REMINDER = 4,
-    ENCRYPTED = 5
+    REMINDER = 3,
+    ENCRYPTED = 4
 
 class Event(db.Model):
     __tablename__ = 'event'
@@ -49,10 +54,29 @@ def generateKey(value):
     return base64.urlsafe_b64encode(hashFunct.digest())
 
 def encrypt(value, key):
+    """Encryptes the value based on the key
+
+    Args:
+        value (str): value to encrypt
+        key (str): password to generate key from
+
+    Returns:
+        (base64): base64 string of ciphertext
+    """
     encryptionSuite = Fernet(generateKey(key))
     return encryptionSuite.encrypt(value.encode())
 
 def decrypt(value, key):
+    """Atempts to decrypt the value based on the key
+
+    Args:
+        value (base64): base64 string of ciphertext
+        key (str): password to generate key from
+
+    Returns:
+        (str): plain text if successful
+        (None): None if unsucessful
+    """
     encryptionSuite = Fernet(generateKey(key))
     try:
         return encryptionSuite.decrypt(value).decode('utf-8')
@@ -60,6 +84,22 @@ def decrypt(value, key):
         return None
 
 def createEvent(name, owner, event_type, discrption=None, start_time=None, end_time=None, parent=None, password=None):
+    """Creates an event, addes it to the database, and returns it
+
+    Args:
+        name (str): 0 < length <= 60, title of event, is not encrypted for encrypted notes
+        owner (int): id of user who this event belongs to
+        event_type (EventType): type of this event, refer to EventType for more infomation
+    Kwargs:
+        discrption (str, Optional): Extra text about the event, is encrypted and required for encrypted notes
+        start_time (datetime, Optional): Start time of event, only used in some EventTypes
+        end_time (datetime, Optional): End time of event, only used in some EventTypes
+        parent (int, Optional): id of event this is a child of if any
+        password (str): Used only on enrypted EventType, required in this case. Used to encrypt discription
+
+    Returns:
+        (Event): newly created event
+    """
     if name is None or 60 < len(name) or len(name) <= 0:
         raise ValueError("Name length out of range")
     if owner is None or user.getUser(owner) is None:
@@ -82,8 +122,6 @@ def createEvent(name, owner, event_type, discrption=None, start_time=None, end_t
         raise ValueError("Reminder types have a start time and no end times")
     elif event_type == EventType.EVENT and (start_time is None or end_time is None):
         raise ValueError("Event types have start and end times")
-    elif event_type == EventType.ALL_DAY and (start_time is None or end_time is None):
-        raise ValueError("All day types have start and end times")
 
     if event_type == EventType.ENCRYPTED:
         discrption = encrypt(discrption, password)

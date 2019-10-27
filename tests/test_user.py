@@ -5,6 +5,7 @@ from flask_testing import TestCase
 from OOZero import create_app
 from OOZero.model import db
 import OOZero.user_model as user
+import OOZero.event_model as event
 
 class TestUser(TestCase, unittest.TestCase):
 
@@ -79,9 +80,13 @@ class TestUser(TestCase, unittest.TestCase):
         user.removeUser("epicUsername69")
         self.assertIsNone(user.User.query.filter_by(username="epicUsername69").first()) #Test remove by username
         testPerson = user.User.query.filter_by(username="username").first()
+        testEvent = event.createEvent("testEvent", testPerson.id, event.EventType.NOTE)
+        self.assertIsNotNone(event.Event.query.filter_by(owner_id=testEvent.id).first())
         user.removeUser(testPerson.id)
         self.assertIsNone(user.User.query.filter_by(username="username").first()) #Test remove by id
+        self.assertIsNone(event.Event.query.filter_by(id=testEvent.id).first())
         user.removeUser(testPerson.id) #Make sure error is not thrown for non existent user
+
 
     def test_authenticateUser(self):
         newUser = user.addUser("dust", "goodPassword")
