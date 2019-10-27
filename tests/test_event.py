@@ -82,6 +82,10 @@ class TestUser(TestCase, unittest.TestCase):
         event0 = event.createEvent("cool hat", 1, event.EventType.NOTE)
         self.assertEqual(event0.name, "cool hat")
         self.assertRaises(ValueError, lambda: event.createEvent("hi", 1, event.EventType.NOTE, start_time=datetime.datetime.utcnow()))
+        event0 = event.createEvent("This is a thing", 1, event.EventType.ENCRYPTED, discrption="Hidden text", password="mushSecure")
+        self.assertNotEqual(event0.discrption, "Hidden text")
+        self.assertEqual(event.decrypt(event0.discrption, "mushSecure"), "Hidden text")
+        self.assertRaises(TypeError, lambda: event.createEvent("encrypted", 1, event.EventType.ENCRYPTED))
         event0 = event.createEvent("event", 1, event.EventType.EVENT, start_time=datetime.datetime.utcnow(), end_time=datetime.datetime.utcnow())
         self.assertEqual(event0.name, "event")
         self.assertRaises(ValueError, lambda: event.createEvent("event", 1, event.EventType.EVENT, start_time=datetime.datetime.utcnow()))
@@ -97,6 +101,19 @@ class TestUser(TestCase, unittest.TestCase):
         self.assertRaises(ValueError, lambda: event.createEvent("ALL_DAY", 1, event.EventType.ALL_DAY, start_time=datetime.datetime.utcnow()))
         self.assertRaises(ValueError, lambda: event.createEvent("ALL_DAY", 1, event.EventType.ALL_DAY, end_time=datetime.datetime.utcnow()))
         self.assertRaises(ValueError, lambda: event.createEvent("ALL_DAY", 1, event.EventType.ALL_DAY))
+
+    def test_generateKey(self):
+        self.assertEqual(event.generateKey("help"), b'F4LKJgsRbCNgghB4h152bgO6HNtUc4FBbi-r4cSVgEs=')
+        self.assertEqual(event.generateKey("this could be a password"), event.generateKey("this could be a password"))
+
+    def test_encrypt(self):
+        ciphertext = event.encrypt("some secret thing", "some password")
+        self.assertNotEqual(ciphertext, "some secret thing")
+
+    def test_decrypt(self):
+        ciphertext = event.encrypt("some secret thing", "some password")
+        self.assertEqual(event.decrypt(ciphertext, "some password"), "some secret thing")
+        self.assertIsNone(event.decrypt(ciphertext, "wrong password"))
 
 if __name__ == '__main__':
     unittest.main()
