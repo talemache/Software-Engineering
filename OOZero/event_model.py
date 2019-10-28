@@ -28,7 +28,7 @@ class Event(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey("user.id"), unique=False, nullable=False)
     owner = db.relationship("User", backref=db.backref("user"), foreign_keys=[owner_id], uselist=False)
     name = db.Column(db.String(60), unique=False, nullable=False)
-    discrption = db.Column(db.Text, unique=False, nullable=True)
+    description = db.Column(db.Text, unique=False, nullable=True)
     timestamp = db.Column(db.DateTime, unique=False, nullable=False, default=datetime.datetime.utcnow)
     start_time = db.Column(db.DateTime, unique=False, nullable=True)
     end_time = db.Column(db.DateTime, unique=False, nullable=True)
@@ -38,7 +38,7 @@ class Event(db.Model):
     event_type = db.Column(db.Enum(EventType), unique=False, nullable=False)
 
     def __repr__(self):
-        return str(self.id) + ', ' + str(self.name) + ', ' + str(self.owner_id) + ', ' + str(self.discrption)  + ', ' + str(self.timestamp)  + "\n" 
+        return str(self.id) + ', ' + str(self.name) + ', ' + str(self.owner_id) + ', ' + str(self.description)  + ', ' + str(self.timestamp)  + "\n" 
 
 def generateKey(value):
     """Generates a 256 bit encryption key off of the given string
@@ -83,7 +83,28 @@ def decrypt(value, key):
     except InvalidToken:
         return None
 
-def createEvent(name, owner, event_type, discrption=None, start_time=None, end_time=None, parent=None, password=None):
+def checkEventAttributes(event):
+    """Checks the values of event attributes to ensure they are valid
+    """
+    if event.name is None or 60 < len(event.name) or len(event.name) <= 0:
+        raise ValueError("Name length out of range")
+    if event.owner_id is None:
+        raise ValueError("Must have a valid owner")
+    if not type(event.event_type) is EventType:
+        raise ValueError("Must have a valid event type")
+    
+    if (event.event_type == EventType.NOTE or event.event_type == EventType.ENCRYPTED) and (not event.start_time is None or not event.end_time is None):
+        raise ValueError("Note / encrypted note types do not have start or end times")
+    elif event.event_type == EventType.REMINDER and (event.start_time is None or not event.end_time is None):
+        raise ValueError("Reminder types have a start time and no end times")
+    elif event.event_type == EventType.EVENT and (event.start_time is None or event.end_time is None):
+        raise ValueError("Event types have start and end times")
+    if (not event.start_time is None) and (not event.end_time is None):
+        pass
+
+    return True
+
+def createEvent(name, owner, event_type, description=None, start_time=None, end_time=None, parent=None, password=None):
     """Creates an event, addes it to the database, and returns it
 
     Args:
@@ -91,7 +112,7 @@ def createEvent(name, owner, event_type, discrption=None, start_time=None, end_t
         owner (int): id of user who this event belongs to
         event_type (EventType): type of this event, refer to EventType for more infomation
     Kwargs:
-        discrption (str, Optional): Extra text about the event, is encrypted and required for encrypted notes
+        description (str, Optional): Extra text about the event, is encrypted and required for encrypted notes
         start_time (datetime, Optional): Start time of event, only used in some EventTypes
         end_time (datetime, Optional): End time of event, only used in some EventTypes
         parent (int, Optional): id of event this is a child of if any
@@ -100,33 +121,75 @@ def createEvent(name, owner, event_type, discrption=None, start_time=None, end_t
     Returns:
         (Event): newly created event
     """
-    if name is None or 60 < len(name) or len(name) <= 0:
-        raise ValueError("Name length out of range")
-    if owner is None or user.getUser(owner) is None:
-        raise ValueError("Must have a valid owner")
-    if not type(event_type) is EventType:
-        raise ValueError("Must have a valid event type")
     if not parent is None and Event.query.filter_by(id=parent).first() is None:
         raise ValueError("Parent, if used, must be a valid event")
     if event_type == EventType.ENCRYPTED:
-        if discrption is None:
+        if description is None:
             raise TypeError("Encrypted notes must have a discription")
         if password is None:
             raise TypeError("Encrypted notes must have a password")
     elif not password is None:
         raise TypeError("Only encrypted notes can have a password")
 
-    if (event_type == EventType.NOTE or event_type == EventType.ENCRYPTED) and (not start_time is None or not end_time is None):
-        raise ValueError("Note / encrypted note types do not have start or end times")
-    elif event_type == EventType.REMINDER and (start_time is None or not end_time is None):
-        raise ValueError("Reminder types have a start time and no end times")
-    elif event_type == EventType.EVENT and (start_time is None or end_time is None):
-        raise ValueError("Event types have start and end times")
-
     if event_type == EventType.ENCRYPTED:
-        discrption = encrypt(discrption, password)
+        description = encrypt(description, password)
 
-    db.session.add(Event(owner_id=owner, name=name, event_type=event_type, discrption=discrption, start_time=start_time, end_time=end_time, parent_id=parent))
+    newEvent = Event(owner_id=owner, name=name, event_type=event_type, description=description, start_time=start_time, end_time=end_time, parent_id=parent)    
+    if checkEventAttributes(newEvent):
+        db.session.add(newEvent)
+        db.session.commit()
+        return Event.query.filter_by(owner_id=owner, name=name, event_type=event_type, description=description, start_time=start_time, end_time=end_time, parent_id=parent).first()
+
+def removeEvent(event):
+    """Removes event from database, if event doesn't exist don't do anything. Also delete child events
+
+    Args:
+        event (int | User): Removes event by id or event object
+    """
+    if type(event) == int:
+        event = Event.query.filter_by(id=event).first()
+    elif type(event) != Event:
+        raise TypeError("Event was not an int or Event")
+    if event is None:
+        return
+    for child in Event.query.filter_by(parent_id=event.id):
+        removeEvent(child)
+    db.session.delete(event)
     db.session.commit()
-    return Event.query.filter_by(owner_id=owner, name=name, event_type=event_type, discrption=discrption, start_time=start_time, end_time=end_time, parent_id=parent).first()
 
+def getEventById(id):
+    """Get single event by id
+    """
+    return Event.query.filter_by(id=id).first()
+
+def getEventByOwner(owner):
+    """Get list of events by there owner
+    Args:
+        owner (int | User): User object or user id
+    """
+    if type(owner) is user.User:
+        owner = owner.id
+    return Event.query.filter_by(owner_id=owner).all()
+
+def editEvent(event, name=None, owner=None, description=None, start_time=None, end_time=None, password=None):
+    if type(event) is int:
+        event = getEventById(event)
+    if not name is None:
+        event.name = name
+    if not owner is None:
+        event.owner_id = owner
+    if not start_time is None:
+        event.start_time = start_time
+    if not end_time is None:
+        event.end_time = end_time
+    if not description is None:
+        if event.event_type is EventType.ENCRYPTED:
+            if password is None:
+                raise TypeError("Changing the discription on an encrypted note requires a password")
+            event.description = encrypt(description, password)
+        else:
+            event.description = description
+
+    db.session.commit()
+    return getEventById(event.id)
+    

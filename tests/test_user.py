@@ -28,6 +28,7 @@ class TestUser(TestCase, unittest.TestCase):
     def setUp(self):
         """This optional method is called before every test method
         """
+        db.drop_all()
         users = []
         users.append(user.User(username="username", name="name", email="email@email.email", password_hash="password_hash", salt="salt", profile_picture=b"profile_picture"))
         users.append(user.User(username="test", password_hash="iiojfeaioieof", salt="saltySalt"))
