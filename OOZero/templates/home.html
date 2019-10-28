@@ -2,15 +2,43 @@
 {% block title %}Signup{% endblock %}
 {% block content %}
 
-<div class="main">
-    <section>
-        <div class="greeting">
-            <h5 class="hello">Hey There!</h5>
-            <p class="intro"> Welcome to our web site for managing personal notes and information!</p>
+  <div class="jumbotron text-center" style="padding-top: 5%">
+        <h1>OO-Zero Note Taking</span>
+        <br>
+        <h4> Welcome to our web site for managing personal notes and information!</h4>
+        <br>
+        {% if username %}
+        <h3> Hello, {{username}}!</h3>
+        <h4> Today's Date is:</h4>
+        <h4 id="date"></h4>
 
-            <p class="statement" style="margin-top:3%;">Sincerely,<br>
-                <h5 class="statement" style="margin-top:0%;">Team OO-Zero</h5>
+        {% endif %}
+    </div>
+    <div class="container" id="about">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center slideanim">
+            </div><!-- ./column -->
+        </div><!-- ./row -->
+        <div class="row">
+            <div class="col-md-4 col-lg-4 col-sm-12 co-xs-12 text-center">
+                <h3><b>Signup / Login System</b></h3>
+            </div>
 
-        </div>
-</div>
+            <div class="col-md-4 col-lg-4 col-sm-12 co-xs-12 text-center">
+                <h3><b>Add,Delete and Edit Notes</b></h3>
+            </div>
+
+            <div class="col-md-4 col-lg-4 col-sm-12 co-xs-12 text-center">
+                <h3><b>More to Come!</b></h3>
+            </div>
+        </div> <!-- ./row -->
+    </div> <!-- ./cotainer -->
+<script>
+n =  new Date();
+y = n.getFullYear();
+m = n.getMonth() + 1;
+d = n.getDate();
+document.getElementById("date").innerHTML = m + "/" + d + "/" + y;
+</script>
+
 {% endblock %}
