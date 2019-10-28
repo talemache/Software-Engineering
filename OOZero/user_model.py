@@ -15,17 +15,17 @@ class User(db.Model):
     email = db.Column(db.String(60), unique=False, nullable=True)
     password_hash = db.Column(db.String(129), unique=False, nullable=False)
     salt = db.Column(db.String(128), unique=False, nullable=False)
-    profile_picture = db.Column(db.LargeBinary, nullable=True) 
+    profile_picture = db.Column(db.LargeBinary, nullable=True)
 
     def __repr__(self):
-        return str(self.id) + ', ' + str(self.username) + ', ' + str(self.name) + ', ' + str(self.email)  + ', ' + str(self.password_hash)  + ', ' + str(self.salt) + "\n" 
+        return str(self.id) + ', ' + str(self.username) + ', ' + str(self.name) + ', ' + str(self.email)  + ', ' + str(self.password_hash)  + ', ' + str(self.salt) + "\n"
 
 def hashPassword(password, salt):
     """Generates hash from given salt and password
 
     Args:
         password (str): password
-        salt (str): 128 byte hex string 
+        salt (str): 128 byte hex string
 
     Returns:
         (str): 128 byte hex hash
@@ -40,7 +40,7 @@ def getUser(user):
 
     Args:
         user (str | int): Finds user by id or username
-    
+
     Returns:
         on sucess - User: populated with the users infomation
         on failure - None: Null
@@ -85,7 +85,7 @@ def addUser(username, password, name=None, email=None, profile_picture=None):
     db.session.add(User(username=username, name=name, email=email, password_hash = hashPassword(password, salt), salt=salt, profile_picture=profile_picture))
     db.session.commit()
     return getUser(username)
-    
+
 
 def authenticateUser(username, password):
     """Finds user with username and checks if hashed and salted password matches hash
@@ -119,4 +119,3 @@ def removeUser(user):
         return
     db.session.delete(user)
     db.session.commit()
-
