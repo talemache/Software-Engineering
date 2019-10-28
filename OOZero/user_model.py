@@ -119,3 +119,7 @@ def removeUser(user):
         return
     db.session.delete(user)
     db.session.commit()
+
+def check_username(username):
+    exists = User.query.filter_by(username=username).scalar() is not None
+    return exists
