@@ -8,7 +8,10 @@ app = create_app()
 @app.route('/')
 #@login_required
 def home():
+    if session['username']:
+        return render_template('home.html', username=session['username'])
     return render_template('home.html')
+
 
 @app.route('/login/', methods=['POST', 'GET'])
 def login():
@@ -20,6 +23,7 @@ def login():
         user = authenticateUser(username, password)
         if user:
             user_login(user)
+            session['username'] = username
             return redirect(url_for('home'))
         else:
             error = 'Incorrect username or password entered.'
@@ -44,12 +48,12 @@ def signup():
         else:
             addUser(username=username, password=password, name=name, email=email)
             session['username'] = username
-            print(username)
             return redirect('/')
     return render_template('signup.html')
 
 @app.route('/logout/', methods=['POST', 'GET'])
 def logout():
+    session['username'] = None
     user_logout()
     return redirect(url_for('home'))
 
