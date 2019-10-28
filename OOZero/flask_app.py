@@ -1,6 +1,6 @@
 from OOZero import create_app
-from flask import Flask, render_template, request, redirect, url_for, session
-from OOZero.user_model import authenticateUser, addUser, hashPassword
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from OOZero.user_model import authenticateUser, addUser, hashPassword, check_username
 from OOZero.user_session import login_required, user_login, user_logout
 
 app = create_app()
@@ -40,16 +40,14 @@ def signup():
         name = request.form['name']
 
         # Need to check if username is already taken here
-        #check = functions.check_username(username)
-        check = False
+        check = check_username(username)
         if check:
-            flash('Username already taken!')
-
+            error = 'Username already taken.'
         else:
             addUser(username=username, password=password, name=name, email=email)
             session['username'] = username
             return redirect('/')
-    return render_template('signup.html')
+    return render_template('signup.html', error=error)
 
 @app.route('/logout/', methods=['POST', 'GET'])
 def logout():
