@@ -190,6 +190,7 @@ def editEvent(event, name=None, owner=None, description=None, start_time=None, e
         else:
             event.description = description
 
+    checkEventAttributes(event)
     db.session.commit()
     return getEventById(event.id)
     

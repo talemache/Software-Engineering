@@ -135,11 +135,12 @@ class TestUser(TestCase, unittest.TestCase):
         updatedEvent = event.editEvent(event0, name="new name")
         self.assertEqual(event0.id, updatedEvent.id)
         self.assertEqual(updatedEvent.name, "new name")
+        self.assertRaises(ValueError, lambda: event.editEvent(event0, name=""))
         event0 = event.createEvent("secrete", 2, event.EventType.ENCRYPTED, description="stuff and thigns", password="hidden")
         self.assertRaises(TypeError, lambda: event.editEvent(event0, description="ahh"))
         event0 = event.editEvent(event0, description="ahh", password="hmmm")
         self.assertEqual("ahh", event.decrypt(event0.description, "hmmm"))
-
+        
 
 if __name__ == '__main__':
     unittest.main()
