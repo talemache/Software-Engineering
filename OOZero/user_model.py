@@ -120,6 +120,7 @@ def removeUser(user):
         raise TypeError("User was not a string, int or User")
     if user is None:
         return
+    event.Event.query.filter_by(owner_id=user.id).delete()
     db.session.delete(user)
     db.session.commit()
 
