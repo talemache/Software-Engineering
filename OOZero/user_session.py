@@ -7,10 +7,10 @@ def login_required(func):
        Redirects to '/login' if no user is logged in.
     """
     @wraps(func)
-    def decorator():
+    def decorator(*args, **kargs):
         if not 'user' in session:
             return redirect(url_for('login'))
-        return func()
+        return func(*args, **kargs)
     return decorator
 
 def user_login(user):

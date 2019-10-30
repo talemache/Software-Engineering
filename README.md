@@ -17,6 +17,12 @@ python setup.py develop
 or
 python setup.py install
 ```
+Download the 'config.cfg' file, place it in the OOZero directory and
+set this environment variable (and replace your_flask_dir with the directory
+of your local project):
+```
+OOZERO_CONFIG = your_flask_dir/OOZero/config.cfg
+```
 Running:
 ```
 Windows Powershell: $env:FLASK_APP = "flask_app"
@@ -25,7 +31,6 @@ Linux Bash: export FLASK_APP=flask_app
 
 flask run
 ```
-
 ## Testing:
 
 ```

@@ -1,6 +1,7 @@
 from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from OOZero.model import db
+import OOZero.event_model as event
 import hashlib
 import secrets
 
@@ -9,13 +10,15 @@ import secrets
 
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(30), unique=True, nullable=False)
     name = db.Column(db.String(60), unique=False, nullable=True)
     email = db.Column(db.String(60), unique=False, nullable=True)
     password_hash = db.Column(db.String(129), unique=False, nullable=False)
     salt = db.Column(db.String(128), unique=False, nullable=False)
     profile_picture = db.Column(db.LargeBinary, nullable=True)
+    events = db.relationship("Event", backref=db.backref("event", uselist=True))
 
     def __repr__(self):
         return str(self.id) + ', ' + str(self.username) + ', ' + str(self.name) + ', ' + str(self.email)  + ', ' + str(self.password_hash)  + ', ' + str(self.salt) + "\n"
@@ -117,6 +120,7 @@ def removeUser(user):
         raise TypeError("User was not a string, int or User")
     if user is None:
         return
+    event.Event.query.filter_by(owner_id=user.id).delete()
     db.session.delete(user)
     db.session.commit()
 
