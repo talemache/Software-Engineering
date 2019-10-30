@@ -21,14 +21,14 @@ class User(db.Model):
     events = db.relationship("Event", backref=db.backref("event", uselist=True))
 
     def __repr__(self):
-        return str(self.id) + ', ' + str(self.username) + ', ' + str(self.name) + ', ' + str(self.email)  + ', ' + str(self.password_hash)  + ', ' + str(self.salt) + "\n" 
+        return str(self.id) + ', ' + str(self.username) + ', ' + str(self.name) + ', ' + str(self.email)  + ', ' + str(self.password_hash)  + ', ' + str(self.salt) + "\n"
 
 def hashPassword(password, salt):
     """Generates hash from given salt and password
 
     Args:
         password (str): password
-        salt (str): 128 byte hex string 
+        salt (str): 128 byte hex string
 
     Returns:
         (str): 128 byte hex hash
@@ -43,7 +43,7 @@ def getUser(user):
 
     Args:
         user (str | int): Finds user by id or username
-    
+
     Returns:
         on sucess - User: populated with the users infomation
         on failure - None: Null
@@ -88,7 +88,7 @@ def addUser(username, password, name=None, email=None, profile_picture=None):
     db.session.add(User(username=username, name=name, email=email, password_hash = hashPassword(password, salt), salt=salt, profile_picture=profile_picture))
     db.session.commit()
     return getUser(username)
-    
+
 
 def authenticateUser(username, password):
     """Finds user with username and checks if hashed and salted password matches hash
@@ -124,3 +124,6 @@ def removeUser(user):
     db.session.delete(user)
     db.session.commit()
 
+def check_username(username):
+    exists = User.query.filter_by(username=username).scalar() is not None
+    return exists
