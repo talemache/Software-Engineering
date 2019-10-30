@@ -8,9 +8,13 @@ app = create_app()
 @app.route('/')
 #@login_required
 def home():
-    if session['username']:
-        return render_template('home.html', username=session['username'])
-    return render_template('home.html')
+    try:
+        if session['username']:
+            return render_template('home.html', username=session['username'])
+        return render_template('home.html')
+    except:
+        session['username'] = None
+        return render_template('home.html')
 
 
 @app.route('/login/', methods=['POST', 'GET'])
