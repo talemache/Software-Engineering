@@ -34,6 +34,9 @@ or
 pytest
 ```
 
+## Build Status
+[![Build Status](https://travis-ci.org/talemache/Software-Engineering.svg?branch=master)](https://travis-ci.org/talemache/Software-Engineering)
+
 ## Maintance:
 NEVER COMMIT THE CONTENTES OF ./instance/ to the repository. This directory contains the secret keys and other deployment spcific infomation. To obtain this directory please ask.
 
